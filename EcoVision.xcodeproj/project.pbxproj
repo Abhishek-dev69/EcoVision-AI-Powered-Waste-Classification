@@ -29,9 +29,22 @@
 		78B855792F3D189700C18153 /* EcoVisionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EcoVisionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		78FA95F72F40FC0C0025B376 /* Exceptions for "EcoVision" folder in "EcoVision" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 78B855612F3D189600C18153 /* EcoVision */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		78B855642F3D189600C18153 /* EcoVision */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				78FA95F72F40FC0C0025B376 /* Exceptions for "EcoVision" folder in "EcoVision" target */,
+			);
 			path = EcoVision;
 			sourceTree = "<group>";
 		};
@@ -400,6 +413,8 @@
 				DEVELOPMENT_TEAM = 9KBSZ5H8YN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EcoVision/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to scan waste items for classification.\n";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,6 +447,8 @@
 				DEVELOPMENT_TEAM = 9KBSZ5H8YN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EcoVision/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to scan waste items for classification.\n";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
