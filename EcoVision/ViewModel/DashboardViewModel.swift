@@ -4,7 +4,9 @@ import Combine
 @MainActor
 final class DashboardViewModel: ObservableObject {
 
-    // MARK: Published UI State
+    //////////////////////////////////////////////////////
+    // MARK: Published State
+    //////////////////////////////////////////////////////
 
     @Published var history: [ScanRecord] = []
 
@@ -14,9 +16,17 @@ final class DashboardViewModel: ObservableObject {
     @Published var todayCO2: Double = 0
     @Published var weekCO2: Double = 0
 
+    @Published var currentStreak: Int = 0
+
+    @Published var treesSaved: Double = 0
+
+    @Published var achievements: [Achievement] = []
+
     @Published var chartData: [CarbonDataPoint] = []
 
-    // MARK: Load everything
+    //////////////////////////////////////////////////////
+    // MARK: Load Dashboard Data
+    //////////////////////////////////////////////////////
 
     func loadDashboardData() {
 
@@ -24,7 +34,7 @@ final class DashboardViewModel: ObservableObject {
 
         history = records
 
-        ecoScore = ImpactManager.shared.calculateEcoScore()
+        ecoScore = EcoScoreManager.shared.calculateScore(records: records)
 
         totalCO2 = ImpactManager.shared.totalCO2Saved()
 
@@ -33,6 +43,13 @@ final class DashboardViewModel: ObservableObject {
         weekCO2 = CarbonTrackerManager.shared.weekCO2()
 
         chartData = CarbonTrackerManager.shared.weekChartData()
+
+        currentStreak = StreakManager.shared.currentStreak()
+
+        // FIXED
+        treesSaved = ImpactEquivalenceManager.shared.treesSaved(co2: totalCO2)
+
+        achievements = AchievementManager.shared.unlockedAchievements()
     }
 }
 
