@@ -1,3 +1,10 @@
+//
+//  DashboardView.swift
+//  EcoVision
+//
+//  WWDC-level Dashboard with Eco Score, Streak, Achievements, Impact
+//
+
 import SwiftUI
 
 struct DashboardView: View {
@@ -11,8 +18,15 @@ struct DashboardView: View {
 
             ZStack {
 
-                // SAME gradient as ContentView
+                //////////////////////////////////////////////////////
+                // MARK: Eco Gradient Background
+                //////////////////////////////////////////////////////
+
                 EcoGradientBackground()
+
+                //////////////////////////////////////////////////////
+                // MARK: Scroll Content
+                //////////////////////////////////////////////////////
 
                 ScrollView {
 
@@ -21,29 +35,82 @@ struct DashboardView: View {
                         Spacer().frame(height: 10)
 
                         //////////////////////////////////////////////////////
-                        // MARK: Eco Score Card
+                        // MARK: Eco Score Ring Card
                         //////////////////////////////////////////////////////
 
-                        VStack(spacing: 10) {
+                        VStack(spacing: 12) {
 
                             Text("Eco Score")
                                 .font(.headline)
                                 .foregroundColor(.secondary)
 
-                            Text("\(vm.ecoScore)")
-                                .font(.system(size: 46, weight: .bold))
-                                .foregroundColor(.green)
+                            EcoScoreRingView(score: vm.ecoScore)
 
                         }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(cardBackground)
-                        .overlay(cardBorder)
-                        .cornerRadius(20)
-                        .shadow(color: shadowColor, radius: 12, y: 6)
+                        .cardStyle(colorScheme)
 
                         //////////////////////////////////////////////////////
-                        // MARK: Carbon Summary Card
+                        // MARK: Streak Card 🔥 NEW
+                        //////////////////////////////////////////////////////
+
+                        VStack(spacing: 10) {
+
+                            Text("Current Streak")
+                                .font(.headline)
+
+                            HStack(spacing: 8) {
+
+                                Image(systemName: "flame.fill")
+                                    .foregroundColor(.orange)
+
+                                Text("\(vm.currentStreak) days")
+                                    .font(.system(size: 28, weight: .bold))
+                            }
+
+                            Text("Keep scanning daily to grow your streak")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .cardStyle(colorScheme)
+
+                        //////////////////////////////////////////////////////
+                        // MARK: Trees Saved 🌳 NEW
+                        //////////////////////////////////////////////////////
+
+                        VStack(spacing: 10) {
+
+                            Text("Environmental Impact")
+                                .font(.headline)
+
+                            HStack {
+
+                                VStack {
+
+                                    Text("\(vm.totalCO2, specifier: "%.2f") kg")
+                                        .font(.title2.bold())
+
+                                    Text("CO₂ tracked")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+
+                                Spacer()
+
+                                VStack {
+
+                                    Text("\(vm.treesSaved)")
+                                        .font(.title2.bold())
+
+                                    Text("Trees saved equivalent")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                        .cardStyle(colorScheme)
+
+                        //////////////////////////////////////////////////////
+                        // MARK: Carbon Summary
                         //////////////////////////////////////////////////////
 
                         CarbonSummaryCard(
@@ -51,17 +118,38 @@ struct DashboardView: View {
                             today: vm.todayCO2,
                             week: vm.weekCO2
                         )
+                        .cardStyle(colorScheme)
 
                         //////////////////////////////////////////////////////
                         // MARK: Carbon Chart
                         //////////////////////////////////////////////////////
 
                         CarbonChartView(data: vm.chartData)
-                            .padding()
-                            .background(cardBackground)
-                            .overlay(cardBorder)
-                            .cornerRadius(20)
-                            .shadow(color: shadowColor, radius: 12, y: 6)
+                            .cardStyle(colorScheme)
+
+                        //////////////////////////////////////////////////////
+                        // MARK: Achievements 🏆 NEW
+                        //////////////////////////////////////////////////////
+
+                        VStack(alignment: .leading, spacing: 12) {
+
+                            Text("Achievements")
+                                .font(.headline)
+
+                            ScrollView(.horizontal, showsIndicators: false) {
+
+                                HStack(spacing: 16) {
+
+                                    ForEach(vm.achievements) { achievement in
+
+                                        AchievementView(
+                                            achievement: achievement
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        .cardStyle(colorScheme)
 
                         //////////////////////////////////////////////////////
                         // MARK: Recent History
@@ -72,21 +160,29 @@ struct DashboardView: View {
                             Text("Recent Scans")
                                 .font(.headline)
 
-                            ForEach(vm.history.prefix(5)) { record in
+                            if vm.history.isEmpty {
 
-                                HStack {
-
-                                    Text(record.label)
-
-                                    Spacer()
-
-                                    Text(
-                                        "\(record.carbonFootprint, specifier: "%.2f") kg"
-                                    )
+                                Text("No scans yet")
                                     .foregroundColor(.secondary)
-                                }
 
-                                Divider()
+                            } else {
+
+                                ForEach(vm.history.prefix(5)) { record in
+
+                                    HStack {
+
+                                        Text(record.label)
+
+                                        Spacer()
+
+                                        Text(
+                                            "\(record.carbonFootprint, specifier: "%.2f") kg"
+                                        )
+                                        .foregroundColor(.secondary)
+                                    }
+
+                                    Divider()
+                                }
                             }
 
                             NavigationLink {
@@ -99,13 +195,8 @@ struct DashboardView: View {
                                     .font(.system(size: 15, weight: .semibold))
                                     .foregroundColor(.green)
                             }
-                            .padding(.top, 6)
                         }
-                        .padding()
-                        .background(cardBackground)
-                        .overlay(cardBorder)
-                        .cornerRadius(20)
-                        .shadow(color: shadowColor, radius: 12, y: 6)
+                        .cardStyle(colorScheme)
 
                         Spacer().frame(height: 30)
                     }
@@ -119,30 +210,40 @@ struct DashboardView: View {
             vm.loadDashboardData()
         }
     }
+}
 
-    //////////////////////////////////////////////////////
-    // MARK: UI Helpers
-    //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+// MARK: Card Style Modifier
+//////////////////////////////////////////////////////////////
 
-    var cardBackground: some View {
-        colorScheme == .dark
-        ? Color.white.opacity(0.05)
-        : Color.white.opacity(0.7)
-    }
+extension View {
 
-    var cardBorder: some View {
-        RoundedRectangle(cornerRadius: 20)
-            .stroke(
-                colorScheme == .dark
-                ? Color.white.opacity(0.1)
-                : Color.white.opacity(0.5)
+    func cardStyle(_ scheme: ColorScheme) -> some View {
+
+        self
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(
+                scheme == .dark
+                ? Color.white.opacity(0.05)
+                : Color.white.opacity(0.7)
             )
-    }
-
-    var shadowColor: Color {
-        colorScheme == .dark
-        ? .black.opacity(0.5)
-        : .black.opacity(0.12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(
+                        scheme == .dark
+                        ? Color.white.opacity(0.1)
+                        : Color.white.opacity(0.5)
+                    )
+            )
+            .cornerRadius(20)
+            .shadow(
+                color: scheme == .dark
+                ? .black.opacity(0.5)
+                : .black.opacity(0.12),
+                radius: 12,
+                y: 6
+            )
     }
 }
 
