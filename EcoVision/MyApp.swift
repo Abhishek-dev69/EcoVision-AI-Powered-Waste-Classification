@@ -1,17 +1,28 @@
 //
-//  MyApp.swift.swift
+//  MyApp.swift
 //  EcoVision
-//
-//  Created by Abhishek on 12/02/26.
 //
 
 import SwiftUI
 
 @main
-struct EcoVisionApp: App {
+struct MyApp: App {
+
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+
     var body: some Scene {
+
         WindowGroup {
-            ContentView()
+
+            if hasSeenOnboarding {
+
+                ContentView()
+
+            } else {
+
+                OnboardingView()
+            }
         }
     }
 }
+
