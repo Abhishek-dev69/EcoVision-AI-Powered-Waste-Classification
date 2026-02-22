@@ -165,6 +165,7 @@ final class CameraViewModel: ObservableObject {
 
         // SAVE TO HISTORY
         HistoryManager.shared.save(record: record)
+        StreakManager.shared.updateStreak()
 
         print("✅ Scan saved:", detection.label)
     }
