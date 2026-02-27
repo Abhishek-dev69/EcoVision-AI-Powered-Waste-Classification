@@ -19,8 +19,6 @@ final class CarbonTrackerManager {
             .reduce(0) { $0 + $1.carbonFootprint }
     }
 
-    // MARK: Week CO₂ total
-
     func weekCO2() -> Double {
 
         let calendar = Calendar.current
@@ -30,8 +28,6 @@ final class CarbonTrackerManager {
             .filter { $0.date >= weekAgo }
             .reduce(0) { $0 + $1.carbonFootprint }
     }
-
-    // MARK: Weekly chart data (FIXED)
 
     func weekChartData() -> [CarbonDataPoint] {
 
