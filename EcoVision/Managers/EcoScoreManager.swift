@@ -22,8 +22,6 @@ final class EcoScoreManager {
 
         let avgCarbon =
             totalCarbon / Double(records.count)
-
-        // Lower carbon = higher score
         let score =
             max(0, 100 - Int(avgCarbon * 50))
 
