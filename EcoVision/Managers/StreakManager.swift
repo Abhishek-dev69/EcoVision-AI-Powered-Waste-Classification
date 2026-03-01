@@ -16,10 +16,6 @@ final class StreakManager {
 
     private init() {}
 
-    //////////////////////////////////////////////////////
-    // MARK: Update streak when scan happens
-    //////////////////////////////////////////////////////
-
     func updateStreak() {
 
         let today = Calendar.current.startOfDay(for: Date())
@@ -50,11 +46,6 @@ final class StreakManager {
         UserDefaults.standard.set(streak, forKey: streakKey)
         UserDefaults.standard.set(today, forKey: lastScanKey)
     }
-
-    //////////////////////////////////////////////////////
-    // MARK: Get streak
-    //////////////////////////////////////////////////////
-
     func currentStreak() -> Int {
         UserDefaults.standard.integer(forKey: streakKey)
     }
